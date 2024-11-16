@@ -4,11 +4,12 @@ import pickle
 import random
 
 import librosa
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
+import torch.nn.functional as F
 import torchcrepe
 
+from model_enc_f0 import *
 from model_f0 import PC
 
 
@@ -41,60 +42,68 @@ def main(args):
     time_org = 0.005 * nzindex.cpu().numpy()
     time_frame = np.arange(l) * 0.005
     x_real = np.interp(time_frame, time_org, f0, left=f0[0], right=f0[-1]).astype('float32')
-    
+
     # get singer's id
-    c_trg = None
-    meta = pickle.load(open(args.train_pkl_path, 'rb'))['test']
-    for row in meta:
+    c_trg, i_trg = None, None
+    meta = sorted(pickle.load(open(args.train_pkl_path, 'rb'))['test'])
+    for i, row in enumerate(meta):
         if row[0] == args.target_singer:
             c_trg = row[1]
+            i_trg = i
 
-    model = PC(args)
-    checkpoint = torch.load(args.ckpt_path, map_location='cpu')
+    model_pc = PC(args)
+    checkpoint = torch.load(args.pc_ckpt_path, map_location='cpu')
+    model_pc.load_state_dict(checkpoint['state_dict'])
+    model_pc = model_pc.to(args.device)
+
+    model = ResNetSE1D(args).to(args.device)
+    checkpoint = torch.load(os.path.join(args.ckpt_dir, f'{args.model_name}.ckpt'))
     model.load_state_dict(checkpoint['state_dict'])
-    model = model.to(args.device)
 
-    # predict
+    # load average embeddings
+    with open(os.path.join(args.ckpt_dir, f'emb_{args.model_name.split("_")[0]}.pkl'), 'rb') as f:
+        idx2emb = pickle.load(f)
+
+    model_pc.eval()
     model.eval()
     with torch.no_grad():
         x_real = torch.from_numpy(x_real).unsqueeze(0).to(args.device)
         c_trg = torch.from_numpy(c_trg).unsqueeze(0).to(args.device)
-        x_input, x_output = model(x_real, c_trg)
-        x_pred = model.reverse_embedding(x_output)
 
-    plt.plot(x_real[0].cpu().numpy())
-    plt.plot(x_pred[0].cpu().numpy())
-    plt.xlabel('Frame')
-    plt.ylabel('Frequency (Hz)')
-    plt.legend(['input', 'output'])
-    plt.savefig(os.path.join(args.ckpt_path.split('/')[0], 'result_f0.png'))
-    np.save(os.path.join(args.ckpt_path.split('/')[0], 'result_f0.npy'), x_pred[0].cpu().numpy())
+        x_input, x_output = model_pc(x_real, c_trg)
+        x_pred_conv = model_pc.reverse_embedding(x_output)
+
+        emb = model(x_real).cpu().tolist()
+        emb_conv = model(x_pred_conv).cpu().tolist()
+        emb_t = idx2emb[i_trg]
+        print(np.dot(emb, emb_t), np.dot(emb_conv, emb_t))
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # Model configuration.
-    parser.add_argument('--lambda_id', type=float, default=1, help='weight for identity mapping loss')
-    parser.add_argument('--lambda_pr', type=float, default=10, help='weight for pitch reconstruction loss')
-    parser.add_argument('--lambda_ft', type=float, default=0.1, help='weight for fourier transform loss')
-    parser.add_argument('--lambda_ext', type=float, default=0.1, help='weight for extent contour loss')
-    parser.add_argument('--lambda_sv', type=float, default=0.1, help='weight for smooth vibrato loss')
+    parser.add_argument('--dim_emb', type=int, default=128)
+    parser.add_argument('--f0_max', type=int, default=1100)
+    parser.add_argument('--f0_min', type=int, default=50)
+    parser.add_argument('--eng_bin', type=int, default=128)
+    parser.add_argument('--eng_max', type=int, default=1)
+    parser.add_argument('--eng_min', type=int, default=1e-4)
+
+    # Pitch conversion model configuration.
     parser.add_argument('--chs_grp', type=int, default=16)
     parser.add_argument('--dim_enc', type=int, default=128)
     parser.add_argument('--dim_neck', type=int, default=2)
     parser.add_argument('--freq', type=int, default=128)
-    parser.add_argument('--dim_emb', type=int, default=128)
     parser.add_argument('--dim_dec', type=int, default=128)
-    parser.add_argument('--f0_max', type=int, default=1100)
-    parser.add_argument('--f0_min', type=int, default=50)
-    parser.add_argument('--ext_th', type=int, default=0.75)
-
+    
     # Training configuration.
     parser.add_argument('--input_path', type=str, default='data/test_audio.wav') # path to source audio
     parser.add_argument('--target_singer', type=str, default='opencpop') # target singer name
     parser.add_argument('--train_pkl_path', type=str, default='train.pkl')
-    parser.add_argument('--ckpt_path', type=str, default='ckpt_f0/model_ckpt_steps_400000.ckpt')
+    parser.add_argument('--pc_ckpt_path', type=str, default='ckpt_f0/model_ckpt_steps_400000.ckpt')
+    parser.add_argument('--ckpt_dir', type=str, default='ckpt_enc_f0/')
+    parser.add_argument('--model_name', type=str, default='ResNetSE1D')
     parser.add_argument('--device', type=torch.device, default='cuda')
     parser.add_argument('--rand_seed', type=int, default=2023)
     

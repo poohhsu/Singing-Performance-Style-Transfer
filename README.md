@@ -1,5 +1,5 @@
-# Any-to-many Singing Style Conversion
-This is the source code of "Any-to-many Singing Style Conversion".
+# Many-to-many Singing Performance Style Transfer on Pitch and Energy Contours
+This is the source code of "Many-to-many Singing Performance Style Transfer on Pitch and Energy Contours".
 
 More resources can be found [here](https://drive.google.com/drive/folders/18674Q414w03XZyIxqfhdsC3FzcoxyosA?usp=sharing).
 
@@ -82,6 +82,23 @@ python test_f0.py --input_path $1 --target_singer $2
 ### Energy
 ```
 python test_eng.py --input_path $1 --target_singer $2
+```
+- $1: source audio file path
+- $2: target singer name (check train.pkl)
+
+
+## Objective evaluation
+
+### Pitch
+```
+python test_enc_f0.py --input_path $1 --target_singer $2
+```
+- $1: source audio file path
+- $2: target singer name (check train.pkl)
+
+### Energy
+```
+python test_enc_eng.py --input_path $1 --target_singer $2
 ```
 - $1: source audio file path
 - $2: target singer name (check train.pkl)
