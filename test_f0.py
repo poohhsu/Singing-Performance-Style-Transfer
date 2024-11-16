@@ -67,8 +67,7 @@ def main(args):
     plt.xlabel('Frame')
     plt.ylabel('Frequency (Hz)')
     plt.legend(['input', 'output'])
-    plt.savefig(os.path.join(args.ckpt_path.split('/')[0], 'result_f0.png'))
-    np.save(os.path.join(args.ckpt_path.split('/')[0], 'result_f0.npy'), x_pred[0].cpu().numpy())
+    plt.savefig('result_f0.png')
 
 
 if __name__ == '__main__':

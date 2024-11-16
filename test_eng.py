@@ -83,8 +83,7 @@ def main(args):
     plt.ylabel('Energy')
     plt.legend(['input', 'output'], loc='upper right')
     plt.subplots_adjust()
-    plt.savefig(os.path.join(args.ckpt_path.split('/')[0], 'result_eng.png'))
-    np.save(os.path.join(args.ckpt_path.split('/')[0], 'result_eng.npy'), x_pred[0].cpu().numpy())
+    plt.savefig('result_eng.png')
 
 
 if __name__ == '__main__':
