@@ -74,11 +74,6 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     # Model configuration.
-    parser.add_argument('--lambda_id', type=float, default=1, help='weight for identity mapping loss')
-    parser.add_argument('--lambda_pr', type=float, default=10, help='weight for pitch reconstruction loss')
-    parser.add_argument('--lambda_ft', type=float, default=0.1, help='weight for fourier transform loss')
-    parser.add_argument('--lambda_ext', type=float, default=0.1, help='weight for extent contour loss')
-    parser.add_argument('--lambda_sv', type=float, default=0.1, help='weight for smooth vibrato loss')
     parser.add_argument('--chs_grp', type=int, default=16)
     parser.add_argument('--dim_enc', type=int, default=128)
     parser.add_argument('--dim_neck', type=int, default=2)
@@ -87,7 +82,6 @@ if __name__ == '__main__':
     parser.add_argument('--dim_dec', type=int, default=128)
     parser.add_argument('--f0_max', type=int, default=1100)
     parser.add_argument('--f0_min', type=int, default=50)
-    parser.add_argument('--ext_th', type=int, default=0.75)
 
     # Training configuration.
     parser.add_argument('--input_path', type=str, default='data/test_audio.wav') # path to source audio

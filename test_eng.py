@@ -96,13 +96,10 @@ if __name__ == '__main__':
     parser.add_argument('--freq', type=int, default=128)
     parser.add_argument('--dim_emb', type=int, default=128)
     parser.add_argument('--dim_dec', type=int, default=128)
+    parser.add_argument('--f0_max', type=int, default=1100)
+    parser.add_argument('--f0_min', type=int, default=50)
 
     # Energy conversion model configuration.
-    parser.add_argument('--lambda_id', type=float, default=1, help='weight for identity mapping loss')
-    parser.add_argument('--lambda_er', type=float, default=10, help='weight for energy reconstruction loss')
-    parser.add_argument('--lambda_ft', type=float, default=0.01, help='weight for fourier transform loss')
-    parser.add_argument('--lambda_ext', type=float, default=0.01, help='weight for extent contour loss')
-    parser.add_argument('--lambda_sv', type=float, default=0.01, help='weight for smooth vibrato loss')
     parser.add_argument('--chs_grp_eng', type=int, default=16)
     parser.add_argument('--dim_enc_eng', type=int, default=128)
     parser.add_argument('--dim_neck_eng', type=int, default=2)
@@ -112,9 +109,6 @@ if __name__ == '__main__':
     parser.add_argument('--eng_bin', type=int, default=128)
     parser.add_argument('--eng_max', type=int, default=1)
     parser.add_argument('--eng_min', type=int, default=1e-4)
-    parser.add_argument('--ext_th_eng', type=int, default=20)
-    parser.add_argument('--f0_max', type=int, default=1100)
-    parser.add_argument('--f0_min', type=int, default=50)
 
     # Training configuration.
     parser.add_argument('--input_path', type=str, default='data/test_audio.wav') # path to source audio
