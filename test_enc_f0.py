@@ -76,7 +76,9 @@ def main(args):
         emb = model(x_real).cpu().tolist()
         emb_conv = model(x_pred_conv).cpu().tolist()
         emb_t = idx2emb[i_trg]
-        print(np.dot(emb, emb_t), np.dot(emb_conv, emb_t))
+
+        print('Similarity before transfer:', np.dot(emb, emb_t)[0])
+        print('Similarity after transfer:', np.dot(emb_conv, emb_t)[0])
 
 
 if __name__ == '__main__':
