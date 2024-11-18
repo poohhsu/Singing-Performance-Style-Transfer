@@ -97,6 +97,7 @@ python test_eng.py --input_path $1 --target_singer $2
 ## Objective evaluation
 
 ### Pitch
+The emb_ResNetSE1D.pkl and ResNetSE1D.ckpt files must be downloaded from the ckpt_enc_f0 folder in the above link.
 ```
 python test_enc_f0.py --input_path $1 --target_singer $2
 ```
@@ -104,6 +105,7 @@ python test_enc_f0.py --input_path $1 --target_singer $2
 - $2: target singer name (check train.pkl)
 
 ### Energy
+The emb_ResNetSE1D.pkl and ResNetSE1D.ckpt files must be downloaded from the ckpt_enc_eng folder in the above link.
 ```
 python test_enc_eng.py --input_path $1 --target_singer $2
 ```

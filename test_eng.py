@@ -114,8 +114,8 @@ if __name__ == '__main__':
     parser.add_argument('--input_path', type=str, default='data/test_audio.wav') # path to source audio
     parser.add_argument('--target_singer', type=str, default='opencpop') # target singer name
     parser.add_argument('--train_pkl_path', type=str, default='train.pkl')
-    parser.add_argument('--pc_ckpt_path', type=str, default='ckpt_f0/model_ckpt_steps_400000.ckpt')
-    parser.add_argument('--ckpt_path', type=str, default='ckpt_eng/model_ckpt_steps_400000.ckpt')
+    parser.add_argument('--pc_ckpt_path', type=str, default='ckpt_f0/model_ckpt_steps_400000.ckpt', help='path to pitch style transfer model')
+    parser.add_argument('--ckpt_path', type=str, default='ckpt_eng/model_ckpt_steps_400000.ckpt', help='path to energy style transfer model')
     parser.add_argument('--device', type=torch.device, default='cuda')
     parser.add_argument('--rand_seed', type=int, default=2023)
     
