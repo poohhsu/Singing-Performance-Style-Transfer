@@ -174,7 +174,7 @@ class EC(nn.Module):
         
         decoder_outputs = self.decoder(encoder_outputs)
 
-        return x, torch.sigmoid(decoder_outputs)
+        return x, torch.clamp(torch.sigmoid(decoder_outputs), 1e-10, 1-1e-10)
 
     def energy_to_coarse(self, eng):
         eng = eng.log10()

@@ -170,7 +170,7 @@ class PC(nn.Module):
         
         decoder_outputs = self.decoder(encoder_outputs)
 
-        return x, torch.sigmoid(decoder_outputs)
+        return x, torch.clamp(torch.sigmoid(decoder_outputs), 1e-10, 1-1e-10)
 
     def f0_to_coarse(self, f0):
         cent = 1200 * torch.log2(f0 / 10.)
