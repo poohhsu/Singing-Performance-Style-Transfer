@@ -1,7 +1,7 @@
 # Many-to-many Singing Performance Style Transfer on Pitch and Energy Contours
 This is the source code of "Many-to-many Singing Performance Style Transfer on Pitch and Energy Contours".
 
-More resources can be found [here](https://drive.google.com/drive/folders/18674Q414w03XZyIxqfhdsC3FzcoxyosA?usp=sharing).
+More resources including style transfer models and objective evaluation models can be found [here](https://drive.google.com/drive/folders/18674Q414w03XZyIxqfhdsC3FzcoxyosA?usp=sharing).
 
 
 ## Environment
@@ -19,20 +19,27 @@ data
  |
  ├－ m4singer
  |    ├－ Alto-1#newboy
- |    |    ├－ 0000.mid
- |    |    ├－ 0000.TextGrid
  |    |    ├－ 0000.wav
+ |    |    ├－ 0001.wav
+ |    |    └── ...
+ |    ├－ Alto-1#云烟成雨
+ |    |    ├－ 0000.wav
+ |    |    ├－ 0001.wav
  |    |    └── ...
  |    └── ...
  |
  ├－ opencpop
- |    ├－ midis
- |    |    └── ...
- |    └── ...
+ |    └── segments
+ |         ├－ wavs
+ |         |    ├－ 2001000001.wav
+ |         |    ├－ 2001000002.wav
+ |         |    └── ...
+ |         └── test.txt
  |
  └── TONAS
       ├－ 01-D_AMairena
-      |    ├－ gt.txt
+      |    └── Vocal.wav
+      ├－ 02-D_ChanoLobato
       |    └── Vocal.wav
       └── ...
 ```
